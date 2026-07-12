@@ -10,6 +10,93 @@
   var brand = window.__BRAND__ || {};
   var reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // -------------------------------------------------------------------------
+  // i18n dictionaries — INLINED here (not a separate file) so the translator
+  // can never break because a second file was missed on deploy or cached out.
+  // Catalan is the HTML default; only the Castilian strings live here. Real
+  // customer review quotes and names are intentionally NOT translated — they
+  // stay verbatim as written on Google, in both language views.
+  // -------------------------------------------------------------------------
+  window.__I18N__ = {
+    es: {
+      "skip": "Ir al contenido",
+      "nav.serveis": "Servicios", "nav.perque": "Por qué MAP", "nav.ressenyes": "Reseñas",
+      "nav.contacte": "Contacto", "nav.callMobile": "Llama ahora · 670 85 80 99",
+      "hero.eyebrow": "Fontanero en Lleida",
+      "hero.h1": "Tu fontanero de <em>confianza</em> en Lleida",
+      "hero.sub": "Reparación de averías, instalaciones, desatascos y cambio de grifos y sanitarios. Trabajo limpio, rápido y con presupuesto claro antes de empezar.",
+      "hero.btnCall": "Llama ahora", "hero.btnWa": "Escríbenos por WhatsApp",
+      "hero.badgeRating": "5,0 · 15 reseñas en Google",
+      "hero.stat1": "Valoración perfecta", "hero.stat2": "Reseñas en Google", "hero.stat3": "Servicio local",
+      "common.photoSoon": "Foto próximamente",
+      "serveis.eyebrow": "Servicios",
+      "serveis.h2": "Todo lo que necesita <em>tu hogar</em>",
+      "serveis.sub": "Del pequeño goteo a la instalación completa. Si tiene que ver con el agua, nos ocupamos.",
+      "serveis.s1.t": "Reparación de averías y fugas",
+      "serveis.s1.d": "Localizamos y solucionamos fugas, goteos y averías con rapidez, evitando daños mayores.",
+      "serveis.s2.t": "Instalaciones de fontanería",
+      "serveis.s2.d": "Nuevas instalaciones y reformas de tuberías de agua para viviendas y locales.",
+      "serveis.s3.t": "Desatascos",
+      "serveis.s3.d": "Desatascamos desagües, tuberías y bajantes con los medios adecuados para cada caso.",
+      "serveis.s4.t": "Grifos, sanitarios y tuberías",
+      "serveis.s4.d": "Sustitución y montaje de grifos, inodoros, lavabos, duchas y tramos de tubería.",
+      "serveis.s5.t": "Instalación de electrodomésticos",
+      "serveis.s5.d": "Conexión de lavadoras, lavavajillas y otros electrodomésticos a la red de agua.",
+      "serveis.s6.t": "Presupuesto sin compromiso",
+      "serveis.s6.d": "Te explicamos el precio antes de empezar. Sin sorpresas en la factura final.",
+      "why.eyebrow": "Por qué MAP", "why.h2": "Motivos para confiar",
+      "why.figure": "Fontanería<br>Instalaciones <strong>MAP</strong>",
+      "why.1.t": "Valoración perfecta 5,0 en Google",
+      "why.1.d": "15 clientes, 15 valoraciones de 5 estrellas. Una reputación que se gana trabajo a trabajo.",
+      "why.2.t": "Presupuesto claro antes de empezar",
+      "why.2.d": "Sabes lo que pagarás desde el primer momento, sin sorpresas en la factura.",
+      "why.3.t": "Trabajo rápido y limpio",
+      "why.3.d": "Resolvemos la avería con agilidad y dejamos el espacio tal como estaba.",
+      "why.4.t": "Trato directo con el profesional",
+      "why.4.d": "Hablas con quien hace el trabajo. Sin intermediarios ni centralitas.",
+      "reviews.eyebrow": "Reseñas",
+      "reviews.h2": "15 valoraciones, <em>todas de 5 estrellas</em>",
+      "reviews.sub": "Opiniones reales de clientes en Google. Incluso empresas de Lleida confían.",
+      "reviews.note": "Un negocio de Lleida que también confía.",
+      "reviews.more": "Y 3 valoraciones más de 5 estrellas:",
+      "pill.prof": "Profesionalidad", "pill.preu": "Buen precio", "pill.rapid": "Rapidez",
+      "pill.punt": "Puntualidad", "pill.qual": "Calidad",
+      "gallery.eyebrow": "Galería", "gallery.h2": "El trabajo, <em>bien hecho</em>",
+      "gallery.sub": "Pronto añadiremos fotografías reales de trabajos de MAP.",
+      "contact.eyebrow": "Contacto",
+      "contact.h2": "Hablemos de tu <em>problema de agua</em>",
+      "contact.sub": "Llama, escribe por WhatsApp o rellena el formulario. Te respondemos enseguida.",
+      "contact.phoneLabel": "Teléfono y WhatsApp", "contact.addrLabel": "Dirección",
+      "schedule.title": "Horario", "schedule.closed": "Cerrado",
+      "day.1": "Lunes", "day.2": "Martes", "day.3": "Miércoles", "day.4": "Jueves",
+      "day.5": "Viernes", "day.6": "Sábado", "day.0": "Domingo",
+      "form.name": "Nombre", "form.namePh": "Tu nombre",
+      "form.phone": "Teléfono", "form.phonePh": "Tu teléfono",
+      "form.type": "Tipo de avería o servicio", "form.typePh": "Ej: fuga en la cocina, cambio de grifo…",
+      "form.msg": "Mensaje <span class=\"opt\">(opcional)</span>", "form.msgPh": "Explícanos brevemente qué necesitas",
+      "form.submit": "Enviar por WhatsApp",
+      "form.note": "Al enviar se abrirá WhatsApp con tu mensaje preparado hacia el 670 85 80 99.",
+      "footer.brand": "Fontanero de confianza en Lleida. Reparaciones, instalaciones y desatascos con valoración perfecta en Google.",
+      "footer.contact": "Contacto", "footer.hours": "Horario",
+      "footer.weekdays": "Lunes a viernes<br>8:00 – 19:00", "footer.weekend": "Sábado y domingo: cerrado",
+      "float.call": "Llama ahora al 670 85 80 99", "float.wa": "Escríbenos por WhatsApp",
+      "meta.title": "Fontanería Instalaciones MAP — Fontanero de confianza en Lleida",
+      "meta.desc": "Fontanero en Lleida. Reparación de averías y fugas, instalaciones, desatascos y cambio de grifos y sanitarios. 5,0★ con 15 reseñas en Google. Presupuesto sin compromiso.",
+      "status.open": "Abierto ahora", "status.opensToday": "Abre hoy a las {h}",
+      "status.closedNext": "Cerrado · Abre {d} a las {h}", "status.closed": "Cerrado"
+    }
+  };
+  window.__I18N_CA__ = {
+    "status.open": "Obert ara", "status.opensToday": "Obre avui a les {h}",
+    "status.closedNext": "Tancat · Obre {d} a les {h}", "status.closed": "Tancat",
+    "day.1": "dilluns", "day.2": "dimarts", "day.3": "dimecres", "day.4": "dijous",
+    "day.5": "divendres", "day.6": "dissabte", "day.0": "diumenge"
+  };
+  window.__I18N_ES_DAYS__ = {
+    "day.1": "lunes", "day.2": "martes", "day.3": "miércoles", "day.4": "jueves",
+    "day.5": "viernes", "day.6": "sábado", "day.0": "domingo"
+  };
+
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   function safe(fn, name) { try { fn(); } catch (e) { console.warn("[" + name + "]", e); } }
