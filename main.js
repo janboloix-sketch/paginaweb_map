@@ -136,31 +136,97 @@
     }, 2500);
   }
 
-  // ---- Live open/closed status from real per-day hours ----
-  function initSchedule() {
+  // ---- Live open/closed status from real per-day hours (language-aware) ----
+  // Computed once; rendered in whatever language is active. renderSchedule() is
+  // re-called by the i18n layer whenever the user switches language.
+  var scheduleState = null;
+  function computeSchedule() {
     var sched = brand.schedule || {};
     var now = new Date(), day = now.getDay(), hour = now.getHours() + now.getMinutes() / 60;
     var today = sched[day];
     var open = !!today && hour >= today.opens && hour < today.closes;
-
+    function fmt(h) { var hh = Math.floor(h), mm = Math.round((h - hh) * 60); return hh + ":" + (mm < 10 ? "0" : "") + mm; }
+    var kind, nextDay = null, atHour = null;
+    if (open) { kind = "open"; }
+    else if (today && hour < today.opens) { kind = "opensToday"; atHour = fmt(today.opens); }
+    else {
+      var d = day, hops = 0;
+      do { d = (d + 1) % 7; hops++; if (sched[d]) { nextDay = d; atHour = fmt(sched[d].opens); break; } } while (hops < 7);
+      kind = nextDay === null ? "closed" : "closedNext";
+    }
+    scheduleState = { day: day, open: open, kind: kind, nextDay: nextDay, atHour: atHour };
     var li = $('.schedule-list li[data-day="' + day + '"]');
     if (li) li.classList.add("is-today");
-
-    function fmt(h) { var hh = Math.floor(h), mm = Math.round((h - hh) * 60); return hh + ":" + (mm < 10 ? "0" : "") + mm; }
+  }
+  function renderSchedule(lang) {
+    if (!scheduleState) return;
+    var s = scheduleState;
+    var days = (lang === "es") ? window.__I18N_ES_DAYS__ : window.__I18N_CA__;
     var msg;
-    if (open) { msg = "Obert ara"; }
-    else if (today && hour < today.opens) { msg = "Obre avui a les " + fmt(today.opens); }
-    else {
-      var d = day, hops = 0, next = null;
-      do { d = (d + 1) % 7; hops++; if (sched[d]) { next = sched[d]; break; } } while (hops < 7);
-      msg = next ? ("Tancat · Obre " + next.label.toLowerCase() + " a les " + fmt(next.opens)) : "Tancat";
-    }
+    if (s.kind === "open") msg = t("status.open", lang);
+    else if (s.kind === "opensToday") msg = t("status.opensToday", lang).replace("{h}", s.atHour);
+    else if (s.kind === "closedNext") msg = t("status.closedNext", lang).replace("{d}", (days["day." + s.nextDay] || "")).replace("{h}", s.atHour);
+    else msg = t("status.closed", lang);
     [["#scheduleStatus", "#scheduleStatusText"], ["#heroStatusBadge", "#heroStatusText"]].forEach(function (pair) {
       var badge = $(pair[0]), text = $(pair[1]);
       if (!badge || !text) return;
-      badge.classList.toggle("is-open", open);
+      badge.classList.toggle("is-open", s.open);
       text.textContent = msg;
     });
+  }
+  // Small string lookup: ES from dict, CA from the CA status map, else key.
+  function t(key, lang) {
+    if (lang === "es") { var es = (window.__I18N__ && window.__I18N__.es) || {}; return es[key] != null ? es[key] : key; }
+    var ca = window.__I18N_CA__ || {}; return ca[key] != null ? ca[key] : key;
+  }
+  function initSchedule() { computeSchedule(); renderSchedule(getLang()); }
+
+  // ---- i18n: Catalan is the HTML default; ES swaps in from lib/i18n.js ----
+  var LANG_KEY = "map-lang";
+  function getLang() { try { return localStorage.getItem(LANG_KEY) === "es" ? "es" : "ca"; } catch (e) { return "ca"; } }
+  function initI18n() {
+    var dict = (window.__I18N__ && window.__I18N__.es) || {};
+    var nodes = $$("[data-i18n]");
+    // Capture Catalan originals (innerHTML, or the target attribute value).
+    nodes.forEach(function (el) {
+      var attr = el.getAttribute("data-i18n-attr");
+      el.__ca = attr ? el.getAttribute(attr) : el.innerHTML;
+    });
+
+    function apply(lang) {
+      nodes.forEach(function (el) {
+        var key = el.getAttribute("data-i18n");
+        var attr = el.getAttribute("data-i18n-attr");
+        var val = (lang === "es" && dict[key] != null) ? dict[key] : el.__ca;
+        if (attr) el.setAttribute(attr, val);
+        else el.innerHTML = val;
+      });
+      // Head + document language.
+      document.documentElement.setAttribute("lang", lang);
+      if (lang === "es" && dict["meta.title"]) document.title = dict["meta.title"];
+      else document.title = "Fontaneria Instalaciones MAP — Fontaner de confiança a Lleida";
+      var md = $('meta[name="description"]');
+      if (md) md.setAttribute("content", lang === "es" ? (dict["meta.desc"] || md.getAttribute("content")) : "Fontaner a Lleida. Reparació d'averies i fuites, instal·lacions, desembussos i canvi d'aixetes i sanitaris. 5,0★ amb 15 ressenyes a Google. Pressupost sense compromís.");
+      // Toggle buttons state.
+      $$(".lang-btn").forEach(function (b) {
+        var on = b.getAttribute("data-lang") === lang;
+        b.classList.toggle("is-current", on);
+        b.setAttribute("aria-pressed", String(on));
+      });
+      // Re-render the live schedule text in this language.
+      renderSchedule(lang);
+    }
+
+    function setLang(lang) {
+      try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+      apply(lang);
+    }
+
+    $$(".lang-btn").forEach(function (b) {
+      b.addEventListener("click", function () { setLang(b.getAttribute("data-lang")); });
+    });
+
+    apply(getLang()); // default Catalan unless the visitor previously chose ES
   }
 
   // ---- Numbered "why" panel: highlight active step as it scrolls ----
@@ -202,13 +268,14 @@
     update();
   }
 
-  // ---- Floating call button appears after the hero ----
+  // ---- Floating buttons (call + WhatsApp) appear after the hero ----
   function initFloatCall() {
-    var hero = $(".hero"), btn = $(".call-float");
-    if (!hero || !btn) return;
-    if (!("IntersectionObserver" in window)) { btn.classList.add("is-visible"); return; }
+    var hero = $(".hero");
+    var btns = $$(".call-float, .wa-float");
+    if (!hero || !btns.length) return;
+    if (!("IntersectionObserver" in window)) { btns.forEach(function (b) { b.classList.add("is-visible"); }); return; }
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { btn.classList.toggle("is-visible", !e.isIntersecting); });
+      entries.forEach(function (e) { btns.forEach(function (b) { b.classList.toggle("is-visible", !e.isIntersecting); }); });
     }, { threshold: 0, rootMargin: "-70% 0px 0px 0px" });
     io.observe(hero);
   }
@@ -310,7 +377,11 @@
     safe(initFloatCall, "initFloatCall");
     safe(initForm, "initForm");
     safe(initYear, "initYear");
+    // Clone the marquee BEFORE i18n so the duplicate half's translatable nodes
+    // are captured too — otherwise switching to ES would translate only one
+    // half and the two halves would differ in width (visible loop jump).
     safe(initReviewsMarquee, "initReviewsMarquee");
+    safe(initI18n, "initI18n");
     safe(initCursor, "initCursor");
     document.documentElement.classList.add("is-ready");
   }

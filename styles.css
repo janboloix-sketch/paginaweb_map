@@ -136,6 +136,18 @@ nav.scrolled { box-shadow: var(--shadow-sm); border-bottom-color: var(--line); h
 }
 .nav-call svg { width: 16px; height: 16px; }
 .nav-call:hover { background: #874a1f; transform: translateY(-1px); }
+/* Language switch (CA / ES) */
+.lang-switch { display: inline-flex; align-items: center; gap: 6px; }
+.lang-sep { width: 1px; height: 14px; background: var(--line-2); }
+.lang-btn {
+  font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: .04em;
+  color: var(--ink-3); padding: 4px 6px; border-radius: 6px; transition: color .2s, background .2s;
+}
+.lang-btn:hover { color: var(--blue); }
+.lang-btn.is-current { color: var(--blue); background: var(--blue-soft); }
+.lang-switch-mobile { gap: 10px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.lang-switch-mobile .lang-btn { font-size: 15px; padding: 8px 14px; border: 1px solid var(--line); }
+.lang-switch-mobile .lang-btn.is-current { border-color: var(--blue); }
 .nav-toggle { display: none; flex-direction: column; gap: 5px; width: 30px; height: 30px; justify-content: center; }
 .nav-toggle span { display: block; height: 2px; width: 100%; background: var(--blue); border-radius: 2px; transition: transform .25s, opacity .25s; }
 .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
@@ -373,16 +385,17 @@ a.contact-item:hover { border-color: var(--copper); box-shadow: var(--shadow-sm)
 .footer-col a:hover { color: var(--copper); }
 .footer-bottom { max-width: 1160px; margin: 24px auto 0; font-size: .85rem; color: rgba(255,255,255,.6); text-align: center; }
 
-/* 14. Floating call ------------------------------------------- */
-.call-float {
-  position: fixed; right: 22px; bottom: 22px; z-index: 90; width: 56px; height: 56px; border-radius: 50%;
-  background: var(--copper-deep); color: #fff; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 12px 30px -8px rgba(158,88,39,.6); opacity: 0; pointer-events: none;
-  transition: opacity .3s var(--ease-out), transform .2s;
+/* 14. Floating buttons (WhatsApp stacked above Call) ----------- */
+.call-float, .wa-float {
+  position: fixed; right: 22px; z-index: 90; width: 56px; height: 56px; border-radius: 50%;
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .3s var(--ease-out), transform .2s;
 }
-.call-float.is-visible { opacity: 1; pointer-events: auto; }
-.call-float:hover { transform: translateY(-2px); }
-.call-float svg { width: 24px; height: 24px; }
+.call-float { bottom: 22px; background: var(--copper-deep); box-shadow: 0 12px 30px -8px rgba(158,88,39,.6); }
+.wa-float   { bottom: 88px; background: #25D366; box-shadow: 0 12px 30px -8px rgba(37,211,102,.55); }
+.call-float.is-visible, .wa-float.is-visible { opacity: 1; pointer-events: auto; }
+.call-float:hover, .wa-float:hover { transform: translateY(-2px); }
+.call-float svg, .wa-float svg { width: 24px; height: 24px; }
 
 /* 15. Cookie banner (dormant styling for when it's enabled) ---- */
 .cookie-banner {
@@ -446,6 +459,6 @@ html.cursor-hover #cursor-ring { --s: 1.8; background: rgba(199,123,63,.15); }
 @media (prefers-reduced-motion: reduce) {
   html.js .reveal.pre { opacity: 1 !important; transform: none !important; }
   .why-item { opacity: 1 !important; }
-  .call-float { transition: none; }
+  .call-float, .wa-float { transition: none; }
   .hero-badge.is-open .status-dot, .schedule-status.is-open .status-dot { animation: none; }
 }
