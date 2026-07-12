@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css?v=20260712f">
+<link rel="stylesheet" href="styles.css?v=20260713b">
 
 <script type="application/ld+json">
 {
@@ -221,72 +221,70 @@
     <p class="section-sub reveal">Opinions reals de clients a Google. Fins i tot empreses de Lleida hi confien.</p>
   </div>
 
-  <div class="reviews-grid">
-    <!-- Column 1: two big quote cards -->
-    <div class="reviews-col reviews-col-feature">
-      <article class="review-card review-feature reveal">
-        <div class="stars" aria-label="5 de 5 estrelles">★★★★★</div>
-        <p class="review-quote">"Tot perfecte, excel·lent instal·lador, ràpid i amb molt bons preus."</p>
-        <p class="review-author">Fernando Pont Garcia</p>
-      </article>
-      <article class="review-card review-feature reveal">
-        <div class="stars" aria-label="5 de 5 estrelles">★★★★★</div>
-        <p class="review-quote">"Molt bé."</p>
-        <p class="review-author">flors carol</p>
-      </article>
-    </div>
-
-    <!-- Column 2 -->
-    <div class="reviews-col">
-      <article class="review-card review-compact reveal">
-        <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Lorena Ribe</span></div>
-        <div class="pills"><span class="pill">Professionalitat</span></div>
-      </article>
-      <article class="review-card review-compact reveal">
-        <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Xavier Gutierrez</span></div>
-        <div class="pills"><span class="pill">Professionalitat</span><span class="pill">Bon preu</span></div>
-      </article>
-      <article class="review-card review-compact reveal">
-        <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Jesus Aranda</span></div>
-        <div class="pills"><span class="pill">Rapidesa</span><span class="pill">Puntualitat</span><span class="pill">Qualitat</span><span class="pill">Professionalitat</span><span class="pill">Bon preu</span></div>
-      </article>
-      <article class="review-card review-compact reveal">
-        <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Miscel·lània Teatre</span></div>
-        <div class="pills"><span class="pill">Qualitat</span></div>
-        <p class="review-note">Un negoci de Lleida que també hi confia.</p>
-      </article>
-      <article class="review-card review-compact reveal">
-        <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Judit MK</span></div>
-        <div class="pills"><span class="pill">Puntualitat</span><span class="pill">Professionalitat</span><span class="pill">Bon preu</span></div>
-      </article>
-    </div>
-
-    <!-- Column 3 -->
-    <div class="reviews-col">
-      <article class="review-card review-compact reveal">
-        <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Ricardo Sanz Cortiella</span></div>
-        <div class="pills"><span class="pill">Professionalitat</span></div>
-      </article>
-      <article class="review-card review-compact reveal">
-        <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">German Espachs</span></div>
-        <div class="pills"><span class="pill">Professionalitat</span></div>
-      </article>
-      <article class="review-card review-compact reveal">
-        <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Vanessa Villegas</span></div>
-        <div class="pills"><span class="pill">Bon preu</span></div>
-      </article>
-      <article class="review-card review-compact reveal">
-        <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Miriam Serra Arbones</span></div>
-        <div class="pills"><span class="pill">Professionalitat</span></div>
-      </article>
-      <article class="review-card review-compact reveal">
-        <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Montse Marti</span></div>
-        <div class="pills"><span class="pill">Rapidesa</span><span class="pill">Puntualitat</span><span class="pill">Qualitat</span><span class="pill">Professionalitat</span><span class="pill">Bon preu</span></div>
-      </article>
+  <!-- Infinite right→left marquee. Two IDENTICAL blocks (built from the same
+       template by main.js) sit end-to-end; translateX(-50%) loops seamlessly
+       because both halves are byte-for-byte the same width. -->
+  <div class="reviews-marquee" aria-label="Ressenyes de clients (carrusel)">
+    <div class="reviews-track" id="reviewsTrack">
+      <div class="reviews-block" data-reviews-block>
+        <article class="review-card review-feature">
+          <div class="stars" aria-label="5 de 5 estrelles">★★★★★</div>
+          <p class="review-quote">"Tot perfecte, excel·lent instal·lador, ràpid i amb molt bons preus."</p>
+          <p class="review-author">Fernando Pont Garcia</p>
+        </article>
+        <article class="review-card review-feature">
+          <div class="stars" aria-label="5 de 5 estrelles">★★★★★</div>
+          <p class="review-quote">"Molt bé."</p>
+          <p class="review-author">flors carol</p>
+        </article>
+        <article class="review-card review-compact">
+          <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Lorena Ribe</span></div>
+          <div class="pills"><span class="pill">Professionalitat</span></div>
+        </article>
+        <article class="review-card review-compact">
+          <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Xavier Gutierrez</span></div>
+          <div class="pills"><span class="pill">Professionalitat</span><span class="pill">Bon preu</span></div>
+        </article>
+        <article class="review-card review-compact">
+          <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Ricardo Sanz Cortiella</span></div>
+          <div class="pills"><span class="pill">Professionalitat</span></div>
+        </article>
+        <article class="review-card review-compact">
+          <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">German Espachs</span></div>
+          <div class="pills"><span class="pill">Professionalitat</span></div>
+        </article>
+        <article class="review-card review-compact">
+          <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Jesus Aranda</span></div>
+          <div class="pills"><span class="pill">Rapidesa</span><span class="pill">Puntualitat</span><span class="pill">Qualitat</span><span class="pill">Professionalitat</span><span class="pill">Bon preu</span></div>
+        </article>
+        <article class="review-card review-compact">
+          <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Miscel·lània Teatre</span></div>
+          <div class="pills"><span class="pill">Qualitat</span></div>
+          <p class="review-note">Un negoci de Lleida que també hi confia.</p>
+        </article>
+        <article class="review-card review-compact">
+          <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Judit MK</span></div>
+          <div class="pills"><span class="pill">Puntualitat</span><span class="pill">Professionalitat</span><span class="pill">Bon preu</span></div>
+        </article>
+        <article class="review-card review-compact">
+          <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Vanessa Villegas</span></div>
+          <div class="pills"><span class="pill">Bon preu</span></div>
+        </article>
+        <article class="review-card review-compact">
+          <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Miriam Serra Arbones</span></div>
+          <div class="pills"><span class="pill">Professionalitat</span></div>
+        </article>
+        <article class="review-card review-compact">
+          <div class="review-top"><span class="stars" aria-label="5 de 5 estrelles">★★★★★</span><span class="review-author">Montse Marti</span></div>
+          <div class="pills"><span class="pill">Rapidesa</span><span class="pill">Puntualitat</span><span class="pill">Qualitat</span><span class="pill">Professionalitat</span><span class="pill">Bon preu</span></div>
+        </article>
+        <article class="review-card review-more-card">
+          <p>I 3 valoracions més de 5 estrelles:</p>
+          <p class="review-more-names"><strong>Albert Costa</strong> · <strong>Victoria Morales</strong> · <strong>Felix Mòdol Alegre</strong></p>
+        </article>
+      </div>
     </div>
   </div>
-
-  <p class="reviews-more reveal">I 3 valoracions més de 5 estrelles: <strong>Albert Costa</strong>, <strong>Victoria Morales</strong> i <strong>Felix Mòdol Alegre</strong>.</p>
 </section>
 
 <!-- ============ GALERIA ============ -->
@@ -427,6 +425,6 @@
      ============================================================ -->
 
 <script defer src="lib/manifest.js"></script>
-<script defer src="main.js?v=20260712f"></script>
+<script defer src="main.js?v=20260713b"></script>
 </body>
 </html>

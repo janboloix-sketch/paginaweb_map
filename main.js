@@ -176,10 +176,16 @@
     function update() {
       ticking = false;
       var r = section.getBoundingClientRect(), vh = window.innerHeight;
-      // progress 0..1 across the section's travel through the viewport
-      var total = r.height + vh;
-      var p = Math.min(Math.max((vh - r.top) / total, 0), 1);
-      var idx = Math.min(items.length - 1, Math.max(0, Math.floor(p * items.length)));
+      // Map the SCREEN CENTRE (not the top edge) against the section, and only
+      // count the inner 20%–80% of its travel — leaving an entry/exit margin so
+      // step 01 activates when the user actually sees the content and step 04
+      // completes just before the section leaves, instead of all four flashing
+      // past in the moment the section clips the viewport edge.
+      //   rawProgress = (viewportCentre - sectionTopAbs) / sectionHeight
+      //   with getBoundingClientRect: viewportCentre - sectionTopAbs = vh/2 - r.top
+      var raw = (vh * 0.5 - r.top) / r.height;
+      var p = Math.min(1, Math.max(0, (raw - 0.2) / 0.6));
+      var idx = Math.min(items.length - 1, Math.floor(p * items.length));
       items.forEach(function (el, i) { el.classList.toggle("is-active", i === idx); });
     }
     window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
@@ -222,6 +228,62 @@
 
   function initYear() { var y = $("#year"); if (y) y.textContent = new Date().getFullYear(); }
 
+  // ---- Reviews marquee: duplicate the block for a seamless -50% loop ----
+  // The CSS animation translates the track by -50%; that only loops without a
+  // jump if the track is exactly two identical halves. We clone the single
+  // authored block so both halves are guaranteed byte-identical (and equal
+  // width), rather than hand-maintaining a duplicate in the HTML.
+  function initReviewsMarquee() {
+    var track = $("#reviewsTrack");
+    if (!track) return;
+    var block = $("[data-reviews-block]", track);
+    if (!block || track.children.length > 1) return; // idempotent
+    var clone = block.cloneNode(true);
+    clone.setAttribute("aria-hidden", "true"); // duplicate is decorative for AT
+    track.appendChild(clone);
+  }
+
+  // ---- Custom cursor: copper dot (instant) + ring (lerp trail) ----
+  function initCursor() {
+    // Fine pointer only; touch/coarse devices keep the native cursor.
+    if (!matchMedia("(pointer: fine)").matches) return;
+
+    var dot = document.createElement("div"); dot.id = "cursor-dot";
+    var ring = document.createElement("div"); ring.id = "cursor-ring";
+    document.body.appendChild(dot); document.body.appendChild(ring);
+    var root = document.documentElement;
+    root.classList.add("custom-cursor");
+
+    var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    var rx = mx, ry = my, ready = false;
+
+    window.addEventListener("mousemove", function (e) {
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + "px"; dot.style.top = my + "px";
+      if (!ready) { ready = true; rx = mx; ry = my; root.classList.add("cursor-ready"); }
+      root.classList.remove("cursor-out");
+    }, { passive: true });
+
+    document.addEventListener("mouseleave", function () { root.classList.add("cursor-out"); });
+    document.addEventListener("mouseenter", function () { root.classList.remove("cursor-out"); });
+
+    // Hover growth over interactive targets.
+    document.addEventListener("mouseover", function (e) {
+      if (e.target.closest && e.target.closest("a, button, .service-card, input, textarea, .review-card")) root.classList.add("cursor-hover");
+    });
+    document.addEventListener("mouseout", function (e) {
+      if (e.target.closest && e.target.closest("a, button, .service-card, input, textarea, .review-card")) root.classList.remove("cursor-hover");
+    });
+
+    var lerp = reducedMotion ? 1 : 0.12; // reduced motion → snap directly, no trail
+    (function loop() {
+      rx += (mx - rx) * lerp;
+      ry += (my - ry) * lerp;
+      ring.style.left = rx + "px"; ring.style.top = ry + "px";
+      requestAnimationFrame(loop);
+    })();
+  }
+
   /* ---- Cookies (DORMANT) --------------------------------------------------
      Only wire this up if Google Analytics (or similar) is ever added AND the
      commented cookie-banner markup in index.html is enabled. Granular consent:
@@ -239,6 +301,8 @@
     safe(initFloatCall, "initFloatCall");
     safe(initForm, "initForm");
     safe(initYear, "initYear");
+    safe(initReviewsMarquee, "initReviewsMarquee");
+    safe(initCursor, "initCursor");
     document.documentElement.classList.add("is-ready");
   }
 
