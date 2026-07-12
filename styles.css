@@ -417,6 +417,13 @@ html.cursor-hover #cursor-ring { --s: 1.8; background: rgba(199,123,63,.15); }
   .why-grid { grid-template-columns: 1fr; gap: 34px; }
   .why-figure { max-width: 360px; margin: 0 auto; width: 100%; }
   .contact-grid { grid-template-columns: 1fr; }
+  /* Stacked layout: drop the pinned/tall scroll behaviour and just show the
+     four reasons as a normal, fully-legible list (JS stops the stepping too). */
+  .why { min-height: 0; }
+  .why-sticky { position: static; min-height: 0; padding: 100px max(24px,5vw); }
+  .why-item { opacity: 1; }
+  .why-item.is-active { background: transparent; border-color: transparent; box-shadow: none; }
+  .why-num { color: var(--copper); }
 }
 @media (max-width: 720px) {
   .nav-links { display: none; }
@@ -424,10 +431,7 @@ html.cursor-hover #cursor-ring { --s: 1.8; background: rgba(199,123,63,.15); }
   section { padding: 72px max(20px, 5vw); }
   .gallery-grid { grid-template-columns: 1fr; }
   .contact-form { padding: 24px; }
-  /* Keep the generous scroll travel on phones (≥2.5× viewport) so each
-     numbered step gets a couple of seconds on screen instead of flashing past. */
-  .why { min-height: 300vh; }
-  .why-sticky { padding: 80px max(20px,5vw); }
+  .why-sticky { padding: 72px max(20px,5vw); }
 }
 @media (max-width: 540px) {
   .services-grid { grid-template-columns: 1fr; }  /* breathing room over cramped 2-up */

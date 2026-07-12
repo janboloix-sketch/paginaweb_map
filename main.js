@@ -170,17 +170,26 @@
     var section = $("#perque");
     var items = $$(".why-item");
     if (!section || items.length < 2) return;
-    if (reducedMotion) { items.forEach(function (el) { el.classList.add("is-active"); }); return; }
+    function allActive() { items.forEach(function (el) { el.classList.add("is-active"); }); }
+    if (reducedMotion) { allActive(); return; }
+
+    // The scroll-linked stepping only makes sense on the DESKTOP two-column
+    // layout, where the pinned panel shows one point at a time beside the image.
+    // On mobile the grid stacks (image + all four points taller than the
+    // screen), so pinning + stepping created a dead-scroll zone that clipped
+    // point 01 and jumped to 04. There, just show all four as a normal readable
+    // list. Re-evaluated every tick so resizing across the breakpoint works.
+    var isDesktop = function () { return matchMedia("(min-width: 961px)").matches; };
 
     var ticking = false;
     function update() {
       ticking = false;
+      if (!isDesktop()) { allActive(); return; }
       var r = section.getBoundingClientRect(), vh = window.innerHeight;
       // Map the SCREEN CENTRE (not the top edge) against the section, and only
       // count the inner 20%–80% of its travel — leaving an entry/exit margin so
       // step 01 activates when the user actually sees the content and step 04
-      // completes just before the section leaves, instead of all four flashing
-      // past in the moment the section clips the viewport edge.
+      // completes just before the section leaves.
       //   rawProgress = (viewportCentre - sectionTopAbs) / sectionHeight
       //   with getBoundingClientRect: viewportCentre - sectionTopAbs = vh/2 - r.top
       var raw = (vh * 0.5 - r.top) / r.height;
