@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#E7EEF3"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="90" y="90" width="6" height="450" rx="3" fill="#C77B3F"/>
+  <path d="M210 150c30 35 47 60 47 84a47 47 0 1 1-94 0c0-24 17-49 47-84z" fill="none" stroke="#C77B3F" stroke-width="9" stroke-linejoin="round"/>
+  <text x="330" y="300" font-family="Georgia, serif" font-size="120" font-weight="600" fill="#0F3D5C">MAP</text>
+  <text x="334" y="352" font-family="Arial, sans-serif" font-size="26" font-weight="600" letter-spacing="8" fill="#6B7480">FONTANERIA INSTALACIONS</text>
+  <text x="150" y="470" font-family="Georgia, serif" font-size="46" font-style="italic" fill="#1A1A2E">El teu fontaner de confiança a Lleida</text>
+  <text x="150" y="530" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="#9E5827">5,0 ★ · 15 ressenyes a Google</text>
+</svg>
